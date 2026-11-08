@@ -1,0 +1,7 @@
+export type Product = {id:number;name:string;slug:string;sku:string;oem:string;brand:string;category:string;category_name:string;price:string;old_price:string|null;stock:number;badge:string;description:string;specs:Record<string,string|number>;compatibility:{make:string;model:string;years:string}[];seo_title:string;seo_description:string;images:{url:string;alt:string}[]}
+export type Category = {name:string;slug:string;illustration:string;description:string}
+export type Config = {csrf:string;name:string;headline:string;intro:string;seo_title:string;seo_description:string;canonical_url:string;allow_indexing:boolean;categories:Category[];brands:string[];vehicles:[string,string][]}
+export type ProductList = {count:number;page:number;results:Product[]}
+export type CartItem = {product:Product;quantity:number}
+export type DeliveryPoint = {id:string;city:string;label:string;address:string;hours:string;price:number;days:string}
+export type Order = {id:string;number:string;items:{id:number;name:string;price:string;quantity:number}[];recipient:string;phone:string;email:string;destination:string;delivery:string;delivery_price:string;total:string;status:'pending'|'paid'|'failed'|'cancelled'}
