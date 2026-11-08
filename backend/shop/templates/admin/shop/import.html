@@ -1,0 +1,9 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+<p>Загрузите таблицу и ZIP с фотографиями. Сначала покажем изменения; запись в каталог произойдёт только после подтверждения. Обновление — по артикулу. Пустая колонка «Фото» сохраняет текущую галерею.</p>
+<p><a href="{% url 'admin:shop_product_template' %}">Скачать шаблон .xlsx</a></p>
+{% for error in errors %}<p class="errornote">{{ error }}</p>{% endfor %}
+<form method="post" enctype="multipart/form-data">{% csrf_token %}{{ form.as_p }}<input type="submit" value="Проверить и показать предпросмотр"></form>
+{% if records %}<h2>Предпросмотр: {{ total }} товаров (первые 100)</h2><table><thead><tr><th>Действие</th><th>Артикул</th><th>Название</th><th>Цена</th><th>Наличие</th></tr></thead><tbody>{% for row in records %}<tr><td>{{ row.action }}</td><td>{{ row.sku }}</td><td>{{ row.name }}</td><td>{{ row.price }}</td><td>{{ row.stock }}</td></tr>{% endfor %}</tbody></table>
+{% if not errors %}<form method="post">{% csrf_token %}<input type="hidden" name="token" value="{{ token }}"><input type="hidden" name="confirm" value="1"><p><input type="submit" value="Подтвердить импорт"></p></form>{% endif %}{% endif %}
+{% endblock %}
