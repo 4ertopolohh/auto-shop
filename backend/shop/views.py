@@ -6,7 +6,7 @@ from xml.sax.saxutils import escape
 from django.conf import settings
 from django.core.cache import cache
 from django.core.exceptions import ValidationError
-from django.db import transaction, IntegrityError
+from django.db import transaction, IntegrityError, connection
 from django.db.models import Q, Func, CharField
 from django.http import JsonResponse, HttpResponse
 from django.middleware.csrf import get_token
@@ -63,8 +63,8 @@ def products(request, slug=None):
         return JsonResponse(serialize_product(p)) if p else JsonResponse({'error': 'Товар не найден'}, status=404)
     q = request.GET.get('q', '')[:120]
     if q:
-        qs = qs.annotate(**{f'search_{field}': Func(field, function='CASEFOLD', output_field=CharField()) for field in ('name','sku','oem','brand')})
-        for word in q.casefold().split():
+        qs = qs.annotate(**{f'search_{field}': Func(field, function='LOWER' if connection.vendor == 'postgresql' else 'CASEFOLD', output_field=CharField()) for field in ('name','sku','oem','brand')})
+        for word in (q.lower() if connection.vendor == 'postgresql' else q.casefold()).split():
             qs = qs.filter(Q(search_name__contains=word) | Q(search_sku__contains=word) | Q(search_oem__contains=word) | Q(search_brand__contains=word))
     for field in ['category', 'brand']:
         if request.GET.get(field): qs = qs.filter(**{('category__slug' if field == 'category' else field): request.GET[field][:80]})
