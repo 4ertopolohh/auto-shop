@@ -20,6 +20,14 @@ def illustration(kind, variant=0):
             a=j*math.pi/2.5
             drawing+=f'<circle cx="{math.cos(a)*28:.2f}" cy="{math.sin(a)*28-6:.2f}" r="4" fill="{dark}"/>'
         drawing+='</g><g transform="translate(220 133) rotate(15)"><path d="M-21-42h32q22 0 24 20v55q-3 15-19 15h-37z" fill="#41493e"/><path d="M-17-36h28q15 0 17 15v50q-1 12-14 13h-31z" fill="#626c57"/><path d="M-8-19h27v39H-8z" fill="#30382c"/><path d="M-14-31h15v5h-15m0 58h15v5h-15" stroke="#939c88" stroke-width="2"/></g>'
+    elif kind=='pads':
+        drawing='<ellipse cx="167" cy="228" rx="101" ry="12" fill="#dcded6"/>'
+        for x,y,angle in [(137,118,-15),(199,164,15)]:
+            drawing+=f'<g transform="translate({x} {y}) rotate({angle})"><path d="M-60-30q60-35 120 0v44q-60 20-120 0z" fill="#3e4835" stroke="#263020" stroke-width="3"/><path d="M-54-29q54-29 108 0V6q-54 14-108 0z" fill="#7e8874"/><path d="M-50-21q50-24 100 0v20q-50 14-100 0z" fill="#979e8f"/><path d="M0-40v52" stroke="#46523d" stroke-width="3"/><circle cx="-42" cy="-17" r="3" fill="#4b5841"/><circle cx="42" cy="-17" r="3" fill="#4b5841"/></g>'
+    elif kind=='air-filter':
+        drawing='<ellipse cx="165" cy="228" rx="105" ry="12" fill="#dcded6"/><g transform="translate(164 139) rotate(-17) skewX(-8)"><rect x="-98" y="-64" width="196" height="139" rx="9" fill="#36432d"/><rect x="-94" y="-72" width="188" height="139" rx="8" fill="#8a947c"/><rect x="-84" y="-62" width="168" height="119" rx="3" fill="#d6c49a"/>'
+        for j in range(25):drawing+=f'<path d="M{-80+j*6.5}-60v115" stroke="{["#b8a97f","#e8dcbb"][j%2]}" stroke-width="3"/>'
+        drawing+='</g>'
     elif kind=='filters':
         drawing=f'<ellipse cx="171" cy="232" rx="89" ry="12" fill="#dcded6"/><g transform="rotate(-14 150 140)"><path d="M92 69h106v130q-5 25-53 25t-53-25z" fill="#c59e55"/>'
         for j in range(19):
@@ -47,7 +55,8 @@ def illustration(kind, variant=0):
     else:
         drawing=f'<ellipse cx="170" cy="235" rx="83" ry="11" fill="#dcded6"/><g transform="rotate(-6 170 145)"><path d="M113 87q0-12 13-12h20V44h46v31h21l24 44v104q0 10-10 10H123q-10 0-10-10z" fill="#66745b" stroke="#4e5e43" stroke-width="2"/><path d="M197 91h9l14 25v23h-23z" fill="#eef0e7"/><path d="M146 43h46v18h-46z" fill="#343f2d"/><path d="M119 134h111v73H119z" fill="#ecebdc"/><path d="M119 134h111v18H119z" fill="{red}"/><text x="130" y="174" font-family="Arial" font-size="22" font-weight="700" fill="#34402d">5W-30</text><text x="130" y="194" font-family="Arial" font-size="9" fill="#647056">ENGINE OIL · 4L</text><path d="M123 220h102" stroke="#94a184" stroke-width="2"/></g>'
     transform = 'translate(320 0) scale(-1 1)' if variant else ''
-    return f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 270"><rect width="320" height="270" fill="#f8f8f5"/><g transform="{transform}">{drawing}</g></svg>'
+    viewbox='65 35 205 200' if variant==2 else '0 0 320 270'
+    return f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="{viewbox}"><g transform="{transform}">{drawing}</g></svg>'
 
 class Command(BaseCommand):
     help = 'Идемпотентное наполнение демонстрационного каталога'
@@ -86,5 +95,11 @@ class Command(BaseCommand):
             if created:
                 for n in range(3):
                     image=ProductImage(product=p,position=n,alt=f'{name} — {"общий вид" if n==0 else "детали и конструкция"}')
-                    image.image.save(f'{slug}-{n}.svg',ContentFile(illustration(cat,n%2).encode()))
+                    relative=f'products/{slug}-{n}.svg'
+                    if image.image.storage.exists(relative):
+                        image.image.name=relative;image.save()
+                    else:
+                        image.image.save(f'{slug}-{n}.svg',ContentFile(illustration(cat,n).encode()))
         self.stdout.write(self.style.SUCCESS(f'Каталог готов: {Category.objects.count()} категорий, {Product.objects.count()} товаров.'))
+        from django.core.management import call_command
+        call_command('install_demo_photos')

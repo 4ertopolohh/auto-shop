@@ -15,6 +15,7 @@ from .importing import HEADERS, inspect_workbook, inspect_photos, commit_import
 admin.site.site_header = 'Крутящий момент · управление'
 admin.site.site_title = 'Крутящий момент'
 admin.site.index_title = 'Каталог, заказы и настройки'
+admin.site.site_url = 'http://127.0.0.1:5173/'
 
 class PhotoForm(forms.ModelForm):
     class Meta: model = ProductImage; fields = '__all__'
@@ -60,7 +61,7 @@ class ProductAdmin(admin.ModelAdmin):
         from openpyxl.styles import Font, PatternFill
         from openpyxl.utils import get_column_letter
         book = Workbook(); sheet = book.active; sheet.title = 'Товары'; sheet.append(HEADERS)
-        sheet.append(['KM-EXAMPLE-01','Фильтр масляный','Фильтры','MANN-FILTER',890,12,'03C115561H','Сменный масляный фильтр','{"Высота": "123 мм"}','[{"make":"Volkswagen","model":"Polo","years":"2015–2022"}]','filter.webp',350])
+        sheet.append(['KM-EXAMPLE-01','Фильтр масляный','Фильтры','MANN-FILTER',890,12,'03C115561H','Сменный масляный фильтр','{"Высота": "123 мм"}','[{"make":"Volkswagen","model":"Polo","years":"2015–2022"}]','',350])
         for cell in sheet[1]: cell.font = Font(color='FFFFFF', bold=True); cell.fill = PatternFill('solid', fgColor='25282A')
         for n in range(1,13): sheet.column_dimensions[get_column_letter(n)].width = 24
         sheet.freeze_panes = 'A2'; sheet.auto_filter.ref = sheet.dimensions

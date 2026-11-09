@@ -7,6 +7,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
 class Category(models.Model):
+    image = models.ImageField('Фото категории', upload_to='categories/', blank=True)
     name = models.CharField('Название', max_length=120)
     slug = models.SlugField('Адрес категории', unique=True)
     description = models.TextField('Описание', blank=True)

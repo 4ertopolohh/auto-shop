@@ -1,13 +1,201 @@
-import { Link,useNavigate,useOutletContext } from 'react-router-dom'
-import { useState } from 'react'
-import { ArrowDown,ArrowRight,ArrowUpRight,Check,ChevronDown,PackageCheck,ShieldCheck,Truck,Search } from 'lucide-react'
-import type { Config,ProductList } from '../types'
-import { useResource } from '../api'
-import { ErrorBox,Loading,ProductCard } from '../components/UI'
-import VehicleExplorer from '../components/VehicleExplorer'
-import s from './Home.module.scss'
-export default function Home(){
-  const config=useOutletContext<Config>(),navigate=useNavigate();const [make,setMake]=useState(''),[model,setModel]=useState('')
-  const {data,error,retry}=useResource<ProductList>('products/?featured=1')
-  return <><div className="container"><section className={s.hero}><div className={s.heroCopy}><p className="eyebrow">Запчасти для вашего ритма</p><h1>{config.headline.split('правильной')[0]}<span>{config.headline.includes('правильной')?'правильной детали.':''}</span></h1><p className={s.heroDescription}>{config.intro}</p><Link to="/catalog" className="button">Найти свою деталь <ArrowUpRight size={17}/></Link><div className={s.heroNote}><span><Check size={13}/> Проверенные бренды</span><span><Check size={13}/> Доставка СДЭК</span></div></div><div className={s.heroVisual}><img src="/images/hero-car.webp" alt="Спортивный автомобиль на дороге" fetchPriority="high"/><div className={s.heroPhotoTop}><span>КМ / В ДВИЖЕНИИ</span><span>01 — 06</span></div><div className={s.heroPhotoBottom}><span>Хорошие детали.<br/><b>Большая разница.</b></span><a href="#vehicle" aria-label="Перейти к подбору по автомобилю"><ArrowDown size={23}/></a></div></div></section><section className={s.vehicle} id="vehicle"><div><span className={s.vehicleIcon}><Search size={21}/></span><div><h2>Ваш автомобиль —<br/>наша отправная точка.</h2><p>Покажем совместимые запчасти</p></div></div><form onSubmit={e=>{e.preventDefault();navigate('/catalog?'+new URLSearchParams({...(make?{make}:{}),...(model?{model}:{})}).toString())}}><label><span>01 / Марка</span><select value={make} onChange={e=>{setMake(e.target.value);setModel('')}} aria-label="Марка автомобиля"><option value="">Выберите марку</option>{[...new Set(config.vehicles.map(v=>v[0]))].map(v=><option key={v}>{v}</option>)}</select><ChevronDown size={14}/></label><label><span>02 / Модель</span><select value={model} onChange={e=>setModel(e.target.value)} disabled={!make} aria-label="Модель автомобиля"><option value="">Выберите модель</option>{config.vehicles.filter(v=>v[0]===make).map(v=><option key={v[1]}>{v[1]}</option>)}</select><ChevronDown size={14}/></label><button className="button dark">Подобрать <ArrowRight size={16}/></button></form></section><section className={s.categories}><div className="sectionHeading"><div><p className="eyebrow">По полочкам</p><h2>Что нужно вашему автомобилю?</h2></div><Link to="/catalog">Весь каталог <ArrowUpRight size={16}/></Link></div><div className={s.categoryGrid}>{config.categories.map((c,i)=><Link to={`/catalog?category=${c.slug}`} className={s.category} key={c.slug}><span className={s.categoryNumber}>0{i+1}</span><img src={`/images/${c.illustration}.svg`} alt="" loading="lazy" width="180" height="130"/><div><h3>{c.name}</h3><ArrowUpRight size={16}/></div></Link>)}</div></section><section className={s.popular}><div className="sectionHeading"><div><p className="eyebrow">В рабочем ритме</p><h2>Часто ищут. Часто выбирают.</h2></div><Link to="/catalog">Все запчасти <ArrowUpRight size={16}/></Link></div>{error?<ErrorBox message={error} retry={retry}/>:!data?<Loading/>:<div className="productGrid">{data.results.slice(0,4).map(p=><ProductCard product={p} key={p.id}/>)}</div>}</section><VehicleExplorer/><section className={s.promise}><div><PackageCheck size={25}/><h3>Ничего лишнего</h3><p>Понятные характеристики,<br/>артикулы и совместимость.</p></div><div><ShieldCheck size={25}/><h3>Детали имеют значение</h3><p>Бренды с инженерным подходом.<br/>Выбор с вниманием к ресурсу.</p></div><div><Truck size={25}/><h3>Ближе, чем кажется</h3><p>СДЭК до пункта выдачи<br/>или до вашей двери.</p></div><div className={s.promiseLast}><span>Хорошего пути.</span><p>О деталях позаботимся мы.</p><Link to="/about">Чуть больше о нас <ArrowUpRight size={14}/></Link></div></section></div></>
+import Select from "../components/Select";
+import { Link, useNavigate, useOutletContext } from "react-router-dom";
+import { useState } from "react";
+import { Check, PackageCheck, ShieldCheck, Truck, Search } from "lucide-react";
+import type { Config, ProductList } from "../types";
+import { useResource } from "../api";
+import { ErrorBox, Loading, ProductCard } from "../components/UI";
+import VehicleExplorer from "../components/VehicleExplorer";
+import s from "./Home.module.scss";
+export default function Home() {
+  const config = useOutletContext<Config>(),
+    navigate = useNavigate();
+  const [make, setMake] = useState(""),
+    [model, setModel] = useState("");
+  const { data, error, retry } = useResource<ProductList>(
+    "products/?featured=1",
+  );
+  const headline = config.headline.trim().split(/\s+/);
+  return (
+    <>
+      <div className="container">
+        <section className={s.hero}>
+          <div className={s.heroCopy}>
+            <h1>
+              {headline.length > 2 ? headline.slice(0, -2).join(" ") : ""}
+              <span>{headline.slice(-2).join(" ")}</span>
+            </h1>
+            <p className={s.heroDescription}>{config.intro}</p>
+            <Link to="/catalog" className="button">
+              Найти свою деталь
+            </Link>
+            <div className={s.heroNote}>
+              <span>
+                <Check size={13} /> Проверенные бренды
+              </span>
+              <span>
+                <Check size={13} /> Доставка СДЭК
+              </span>
+            </div>
+          </div>
+          <div className={s.heroVisual}>
+            <img
+              src="/images/hero-car.webp"
+              alt="Спортивный автомобиль на дороге"
+              fetchPriority="high"
+            />
+            <div className={s.heroPhotoBottom}>
+              <span>
+                Хорошие детали.
+                <br />
+                <b>Большая разница.</b>
+              </span>
+            </div>
+          </div>
+        </section>
+        <section className={s.vehicle} id="vehicle">
+          <div>
+            <span className={s.vehicleIcon}>
+              <Search size={21} />
+            </span>
+            <div>
+              <h2>
+                Ваш автомобиль —<br />
+                наша отправная точка.
+              </h2>
+              <p>Покажем совместимые запчасти</p>
+            </div>
+          </div>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              navigate(
+                "/catalog?" +
+                  new URLSearchParams({
+                    ...(make ? { make } : {}),
+                    ...(model ? { model } : {}),
+                  }).toString(),
+              );
+            }}
+          >
+            <div className={s.vehicleField}>
+              <span>Марка</span>
+              <Select
+                value={make}
+                onChange={(e) => {
+                  setMake(e.target.value);
+                  setModel("");
+                }}
+                aria-label="Марка автомобиля"
+              >
+                <option value="">Выберите марку</option>
+                {[...new Set(config.vehicles.map((v) => v[0]))].map((v) => (
+                  <option key={v}>{v}</option>
+                ))}
+              </Select>
+            </div>
+            <div className={s.vehicleField}>
+              <span>Модель</span>
+              <Select
+                value={model}
+                onChange={(e) => setModel(e.target.value)}
+                disabled={!make}
+                aria-label="Модель автомобиля"
+              >
+                <option value="">Выберите модель</option>
+                {config.vehicles
+                  .filter((v) => v[0] === make)
+                  .map((v) => (
+                    <option key={v[1]}>{v[1]}</option>
+                  ))}
+              </Select>
+            </div>
+            <button className="button dark">Подобрать </button>
+          </form>
+        </section>
+        <section className={s.categories}>
+          <div className="sectionHeading">
+            <div>
+              <h2>Что нужно вашему автомобилю?</h2>
+            </div>
+            <Link to="/catalog">Весь каталог </Link>
+          </div>
+          <div className={s.categoryGrid}>
+            {config.categories.map((c) => (
+              <Link
+                to={`/catalog?category=${c.slug}`}
+                className={s.category}
+                key={c.slug}
+              >
+                <img
+                  src={c.image || "/images/part-default.webp"}
+                  alt=""
+                  loading="lazy"
+                  width="180"
+                  height="130"
+                />
+                <div>
+                  <h3>{c.name}</h3>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+        <section className={s.popular}>
+          <div className="sectionHeading">
+            <div>
+              <h2>Часто ищут. Часто выбирают.</h2>
+            </div>
+            <Link to="/catalog">Все запчасти </Link>
+          </div>
+          {error ? (
+            <ErrorBox message={error} retry={retry} />
+          ) : !data ? (
+            <Loading />
+          ) : (
+            <div className="productGrid">
+              {data.results.slice(0, 4).map((p) => (
+                <ProductCard product={p} key={p.id} />
+              ))}
+            </div>
+          )}
+        </section>
+        <VehicleExplorer />
+        <section className={s.promise}>
+          <div>
+            <PackageCheck size={25} />
+            <h3>Ничего лишнего</h3>
+            <p>
+              Понятные характеристики,
+              <br />
+              артикулы и совместимость.
+            </p>
+          </div>
+          <div>
+            <ShieldCheck size={25} />
+            <h3>Детали имеют значение</h3>
+            <p>
+              Бренды с инженерным подходом.
+              <br />
+              Выбор с вниманием к ресурсу.
+            </p>
+          </div>
+          <div>
+            <Truck size={25} />
+            <h3>Ближе, чем кажется</h3>
+            <p>
+              СДЭК до пункта выдачи
+              <br />
+              или до вашей двери.
+            </p>
+          </div>
+          <div className={s.promiseLast}>
+            <span>Хорошего пути.</span>
+            <p>О деталях позаботимся мы.</p>
+            <Link to="/about">Чуть больше о нас </Link>
+          </div>
+        </section>
+      </div>
+    </>
+  );
 }

@@ -1,0 +1,8 @@
+{% if cl.search_fields %}
+<div id="toolbar"><form id="changelist-search" method="get" role="search"><div>
+<label for="searchbar" class="visually-hidden">Поиск по товарам</label>
+<input type="text" size="40" name="q" value="{{ cl.query }}" id="searchbar" placeholder="Название, артикул или OEM">
+<input type="submit" value="Найти">
+{% for pair in cl.params.items %}{% if pair.0 != 'q' %}<input type="hidden" name="{{ pair.0 }}" value="{{ pair.1 }}">{% endif %}{% endfor %}
+</div></form></div>
+{% endif %}

@@ -1,2 +1,244 @@
-.explorer{margin-top:75px;padding:45px 45px 30px;background:#ecefe3;border-radius:22px;display:grid;grid-template-columns:.9fr 1.25fr;align-items:center;gap:35px;overflow:hidden}.copy{h2{font-weight:500;font-size:29px;line-height:1.15;letter-spacing:-.05em;margin:18px 0;span{color:#849176}}p:not(:first-child){font-size:11px;line-height:1.7;color:#7f8973}}.nodeInfo{margin-top:30px;border-top:1px solid #d3d9c8;padding-top:22px;animation:fade .25s;>span{font-size:9px;color:#9aa58d}h3{font-size:18px;font-weight:550;margin:8px 0}a{display:inline-flex;align-items:center;gap:20px;font-size:11px;margin-top:15px;font-weight:600}}.diagram{position:relative;svg{display:block;width:100%}}.viewLabel{position:absolute;top:4%;left:4%;font-size:7px;letter-spacing:.13em;color:#8a967d}.hotspot{position:absolute;transform:translate(-50%,-50%);border:1px solid #f9f9f1;background:#e64832;border-radius:50%;height:23px;width:23px;display:grid;place-items:center;box-shadow:0 0 0 5px #e6483220;transition:box-shadow .25s,transform .25s;span{height:5px;width:5px;background:white;border-radius:50%}b{position:absolute;white-space:nowrap;font-size:9px;font-weight:550;bottom:34px;left:50%;transform:translateX(-50%);background:#33402b;color:#fff;padding:8px 12px;border-radius:5px}.active,&:hover{box-shadow:0 0 0 10px #e6483218;transform:translate(-50%,-50%) scale(1.1)}}.diagramLegend{display:flex;justify-content:space-between;padding:0 5%;font-size:8px;color:#8d9980;span:first-child{display:flex;align-items:center;gap:6px}i{height:5px;width:5px;background:#e64832;border-radius:50%}}
-@keyframes fade{from{opacity:.2;transform:translateY(5px)}}@media(max-width:900px){.explorer{padding:30px;gap:10px;grid-template-columns:1fr 1fr}.copy h2{font-size:25px}}@media(max-width:700px){.explorer{grid-template-columns:1fr;padding:25px 20px;margin-top:45px;gap:25px}.copy h2{font-size:27px}.nodeInfo{margin-top:20px}.diagram{margin:0 -8px}.hotspot{width:24px;height:24px}.diagramLegend{font-size:7px}}
+.explorer {
+  display: grid;
+  grid-template-columns: minmax(250px, 0.72fr) minmax(0, 1.65fr);
+  gap: 18px;
+  align-items: center;
+  margin-top: 75px;
+  padding: 40px 30px 30px 40px;
+  border-radius: 22px;
+  background: #eaece5;
+  overflow: hidden;
+}
+.copy {
+  position: relative;
+  z-index: 2;
+  h2 {
+    font-size: 34px;
+    font-weight: 500;
+    line-height: 1.13;
+    letter-spacing: -0.055em;
+    span {
+      color: #839078;
+    }
+  }
+  p {
+    font-size: 11px;
+    color: #859278;
+    line-height: 1.85;
+    margin-top: 20px;
+    max-width: 300px;
+  }
+}
+.parts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 25px;
+  button {
+    border: 1px solid #d3dbc9;
+    background: transparent;
+    padding: 9px 12px;
+    border-radius: 7px;
+    font-size: 9px;
+    color: #80916f;
+    transition:
+      background 0.25s,
+      color 0.25s,
+      border-color 0.25s,
+      transform 0.25s;
+    &:hover {
+      background: #dfe6d6;
+      border-color: #b9c8a9;
+      transform: translateY(-2px);
+    }
+    &[aria-pressed="true"] {
+      background: #34412b;
+      color: white;
+      border-color: #34412b;
+    }
+  }
+}
+.partInfo {
+  border-top: 1px solid #d3dbc9;
+  padding-top: 24px;
+  margin-top: 26px;
+  min-height: 167px;
+  animation: reveal 0.3s;
+  h3 {
+    font-size: 19px;
+    letter-spacing: -0.035em;
+    font-weight: 500;
+  }
+  p {
+    margin-top: 10px;
+    font-size: 10px;
+  }
+  a {
+    display: inline-block;
+    font-size: 11px;
+    border-bottom: 1px solid #a5b298;
+    padding: 7px 0;
+    margin-top: 13px;
+    transition:
+      color 0.25s,
+      border-color 0.25s;
+    &:hover {
+      color: #e64832;
+      border-color: #e64832;
+    }
+  }
+}
+.presentation {
+  position: relative;
+  min-width: 0;
+}
+.stage {
+  position: relative;
+  height: 490px;
+  isolation: isolate;
+  canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    outline: none;
+    cursor: grab;
+    &:active {
+      cursor: grabbing;
+    }
+    &:focus-visible {
+      outline: 2px solid #e64832;
+      outline-offset: -4px;
+      border-radius: 14px;
+    }
+  }
+}
+.hint {
+  font-size: 8px;
+  text-align: center;
+  line-height: 1.8;
+  color: #9ba78f;
+  margin: 13px auto 0;
+  max-width: 480px;
+}
+.loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 22px;
+  color: #97a28a;
+  font-size: 10px;
+  div {
+    width: 70%;
+    height: 140px;
+    border-radius: 70px 90px 30px 30px;
+    background: #dfe4d7;
+    animation: loading 1.7s infinite ease-in-out;
+  }
+}
+.fallback {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  img {
+    width: 100%;
+    max-height: 390px;
+    object-fit: contain;
+  }
+  p {
+    text-align: center;
+    font-size: 10px;
+    line-height: 1.7;
+    color: #8b9c7c;
+    max-width: 350px;
+    margin: 0 auto;
+  }
+}
+@keyframes loading {
+  50% {
+    opacity: 0.35;
+    transform: scale(0.985);
+  }
+}
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (min-width: 1600px) {
+  .stage {
+    height: 560px;
+  }
+}
+@media (max-width: 1050px) {
+  .explorer {
+    padding: 30px 20px 25px 30px;
+    grid-template-columns: 0.8fr 1.3fr;
+  }
+  .copy h2 {
+    font-size: 29px;
+  }
+  .stage {
+    height: 430px;
+  }
+}
+@media (max-width: 700px) {
+  .explorer {
+    grid-template-columns: 1fr;
+    margin-top: 45px;
+    padding: 25px 20px 23px;
+    gap: 0;
+  }
+  .copy h2 {
+    font-size: 31px;
+  }
+  .copy > p {
+    font-size: 11px;
+    max-width: 350px;
+    margin-top: 17px;
+  }
+  .parts {
+    margin-top: 20px;
+  }
+  .partInfo {
+    padding-top: 20px;
+    margin-top: 22px;
+    min-height: 0;
+    h3 {
+      font-size: 18px;
+    }
+    p {
+      max-width: none;
+    }
+    a {
+      font-size: 10px;
+    }
+  }
+  .stage {
+    height: 360px;
+    margin-inline: -16px;
+  }
+
+  .hint {
+    font-size: 8px;
+    max-width: 270px;
+    margin-top: 15px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .partInfo,
+  .loading div {
+    animation: none;
+  }
+  .parts button {
+    transition: none;
+  }
+}

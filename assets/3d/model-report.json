@@ -1,0 +1,13 @@
+{
+  "meshes": 31,
+  "triangles": 332350,
+  "layers": 16,
+  "bytes": 6608536,
+  "qa_errors": [],
+  "qa_warnings": [
+    "exhaust: duplicate verts=13 loose verts=0",
+    "Interior: duplicate verts=6 loose verts=0",
+    "hidden back-to-back faces: SM_Powertrain_M_Mechanical_Steel<->SM_Powertrain_M_Graphite_Polymer (12 pairs) - delete to save tris",
+    "hidden back-to-back faces: lightsLid (2 pairs) - delete to save tris"
+  ]
+}

@@ -1,1 +1,0 @@
-{"root":["./src/api.ts","./src/main.tsx","./src/store.tsx","./src/types.ts","./src/components/layout.tsx","./src/components/ui.tsx","./src/components/vehicleexplorer.tsx","./src/pages/cart.tsx","./src/pages/catalog.tsx","./src/pages/checkout.tsx","./src/pages/home.tsx","./src/pages/info.tsx","./src/pages/product.tsx","./vite.config.ts"],"version":"5.9.3"}

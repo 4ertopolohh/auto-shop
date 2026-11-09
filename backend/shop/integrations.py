@@ -11,6 +11,8 @@ def configuration():
     return SiteSettings.objects.get_or_create(pk=1)[0]
 
 class MockProvider:
+    def analytics(self, event):
+        IntegrationLog.objects.create(provider='Яндекс Метрика', operation='Имитация события', result=event)
     def delivery_options(self):
         return [
             {'id': 'MSK-01', 'city': 'Москва', 'label': 'Пункт выдачи на Лесной', 'address': 'ул. Примерная, 12', 'hours': 'Ежедневно, 09:00–21:00', 'price': 350, 'days': '2–3 дня'},

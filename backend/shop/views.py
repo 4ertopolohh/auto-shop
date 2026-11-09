@@ -7,7 +7,7 @@ from django.conf import settings
 from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.db import transaction, IntegrityError
-from django.db.models import Q
+from django.db.models import Q, Func, CharField
 from django.http import JsonResponse, HttpResponse
 from django.middleware.csrf import get_token
 from django.views.decorators.http import require_GET, require_POST
@@ -50,7 +50,7 @@ def bootstrap(request):
     config = configuration()
     return JsonResponse({'csrf': get_token(request), 'name': config.name, 'headline': config.headline, 'intro': config.intro,
         'seo_title': config.seo_title, 'seo_description': config.seo_description, 'canonical_url': config.canonical_url,
-        'allow_indexing': config.allow_indexing, 'categories': list(Category.objects.values('name', 'slug', 'illustration', 'description')),
+        'allow_indexing': config.allow_indexing, 'categories': [{'name':c.name,'slug':c.slug,'illustration':c.illustration,'description':c.description,'image':c.image.url if c.image else ''} for c in Category.objects.all()],
         'brands': list(Product.objects.filter(active=True).values_list('brand', flat=True).distinct().order_by('brand')),
         'vehicles': sorted({(c['make'], c['model']) for p in Product.objects.filter(active=True) for c in p.compatibility})})
 
@@ -62,7 +62,10 @@ def products(request, slug=None):
         p = qs.filter(slug=slug).first()
         return JsonResponse(serialize_product(p)) if p else JsonResponse({'error': 'Товар не найден'}, status=404)
     q = request.GET.get('q', '')[:120]
-    if q: qs = qs.filter(Q(name__icontains=q) | Q(sku__icontains=q) | Q(oem__icontains=q) | Q(brand__icontains=q))
+    if q:
+        qs = qs.annotate(**{f'search_{field}': Func(field, function='CASEFOLD', output_field=CharField()) for field in ('name','sku','oem','brand')})
+        for word in q.casefold().split():
+            qs = qs.filter(Q(search_name__contains=word) | Q(search_sku__contains=word) | Q(search_oem__contains=word) | Q(search_brand__contains=word))
     for field in ['category', 'brand']:
         if request.GET.get(field): qs = qs.filter(**{('category__slug' if field == 'category' else field): request.GET[field][:80]})
     if request.GET.get('stock') == '1': qs = qs.filter(stock__gt=0)
@@ -82,6 +85,15 @@ def products(request, slug=None):
 @require_GET
 @api_errors
 def delivery_options(request): return JsonResponse({'points': provider().delivery_options()})
+
+@require_POST
+@api_errors
+def analytics(request):
+    data = body(request, ['event'])
+    if data.get('event') not in ('page_view', 'add_to_cart', 'begin_checkout', 'purchase'): raise ValueError()
+    if limited(request, 'analytics', 120): return JsonResponse({'ok': True})
+    provider().analytics(data['event'])
+    return JsonResponse({'ok': True})
 
 def order_data(order):
     return {'id': str(order.id), 'number': str(order), 'items': order.items, 'recipient': order.recipient, 'phone': order.phone,

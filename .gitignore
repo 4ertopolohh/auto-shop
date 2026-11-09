@@ -6,4 +6,9 @@ backend/db.sqlite3
 backend/media/imports/
 **/__pycache__/
 *.pyc
+*.tsbuildinfo
 .env
+
+tools/3d/.venv/
+tools/3d/blender-mcp/
+*.blend1
