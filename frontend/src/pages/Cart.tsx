@@ -45,7 +45,7 @@ export default function Cart() {
                   >
                     Убавить
                   </button>
-                  <span>{quantity}</span>
+                  <span key={quantity}>{quantity}</span>
                   <button
                     disabled={quantity >= Math.min(p.stock, 99)}
                     onClick={() => change(p.id, quantity + 1)}
@@ -68,7 +68,7 @@ export default function Cart() {
               Вернуться к покупкам
             </Link>
           </div>
-          <aside className={s.summary}>
+          <aside className={s.summary} data-reveal="scale">
             <h2>Ваш заказ</h2>
             <div>
               <span>Товары · {count} шт.</span>
@@ -80,7 +80,7 @@ export default function Cart() {
             </div>
             <div className={s.total}>
               <span>Итого</span>
-              <strong>{money(total)}</strong>
+              <strong key={total}>{money(total)}</strong>
             </div>
             <Link to="/checkout" className="button">
               Перейти к оформлению

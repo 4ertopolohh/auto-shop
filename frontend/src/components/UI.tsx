@@ -121,7 +121,7 @@ export function ProductCard({ product: p }: { product: Product }) {
             {p.old_price && <del>{money(p.old_price)}</del>}
           </div>
           <button
-            className={s.add}
+            key={String(inCart)} className={s.add} data-added={inCart}
             disabled={!p.stock}
             aria-label={`Добавить ${p.name} в корзину`}
             onClick={() => add(p)}

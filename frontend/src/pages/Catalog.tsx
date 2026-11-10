@@ -42,7 +42,7 @@ export default function Catalog() {
           </p>
         </div>
       </div>
-      <div className={s.categories}>
+      <div className={s.categories} data-reveal="down">
         <button
           className={!category ? s.selected : ""}
           onClick={() => update("category", "")}
@@ -182,7 +182,7 @@ export default function Catalog() {
           </div>
         </aside>
         <div className={s.results}>
-          <div className={s.toolbar}>
+          <div className={s.toolbar} data-reveal="up">
             <span>
               {data ? `Найдено: ${data.count}` : "Ищем запчасти…"}
               {params.get("q") && ` · «${params.get("q")}»`}
@@ -220,7 +220,7 @@ export default function Catalog() {
                 ))}
               </div>
               {data.count > 12 && (
-                <div className={s.pagination}>
+                <div className={s.pagination} data-reveal="scale">
                   <button
                     disabled={data.page <= 1}
                     onClick={() => update("page", String(data.page - 1))}

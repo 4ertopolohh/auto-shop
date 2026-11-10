@@ -696,3 +696,9 @@
     font-size: 8px;
   }
 }
+@media (prefers-reduced-motion: no-preference) {
+ .quantity span, .total strong { animation: value-change 280ms ease; }
+ .cartItem { transition: background-color 220ms, box-shadow 220ms; }
+ .cartItem:focus-within { box-shadow: 0 0 0 2px #68865122; }
+}
+@keyframes value-change { from { opacity: .4; translate: 0 5px; } }

@@ -20,7 +20,7 @@ export default function Home() {
     <>
       <div className="container">
         <section className={s.hero}>
-          <div className={s.heroCopy}>
+          <div className={s.heroCopy} data-reveal="up">
             <h1>
               {headline.length > 2 ? headline.slice(0, -2).join(" ") : ""}
               <span>{headline.slice(-2).join(" ")}</span>
@@ -38,9 +38,9 @@ export default function Home() {
               </span>
             </div>
           </div>
-          <div className={s.heroVisual}>
+          <div className={s.heroVisual} data-reveal="scale">
             <img
-              src="/images/hero-car.webp"
+              data-parallax="-1.5" src="/images/hero-car.webp"
               alt="Спортивный автомобиль на дороге"
               fetchPriority="high"
             />
@@ -53,7 +53,7 @@ export default function Home() {
             </div>
           </div>
         </section>
-        <section className={s.vehicle} id="vehicle">
+        <section className={s.vehicle} data-reveal="up" id="vehicle">
           <div>
             <span className={s.vehicleIcon}>
               <Search size={21} />
@@ -124,7 +124,7 @@ export default function Home() {
             {config.categories.map((c) => (
               <Link
                 to={`/catalog?category=${c.slug}`}
-                className={s.category}
+                className={s.category} data-reveal="up"
                 key={c.slug}
               >
                 <img
@@ -161,7 +161,7 @@ export default function Home() {
           )}
         </section>
         <VehicleExplorer />
-        <section className={s.promise}>
+        <section className={s.promise} data-reveal="up">
           <div>
             <PackageCheck size={25} />
             <h3>Ничего лишнего</h3>

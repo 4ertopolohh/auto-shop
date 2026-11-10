@@ -62,7 +62,7 @@ export default function VehicleExplorer() {
       ref={host}
       aria-label="Интерактивный автомобиль"
     >
-      <div className={s.copy}>
+      <div className={s.copy} data-reveal="left">
         <h2>
           В каждой детали —<br />
           <span>целый автомобиль.</span>
@@ -88,7 +88,7 @@ export default function VehicleExplorer() {
           <Link to={`/catalog?category=${part.id}`}>Перейти к деталям</Link>
         </div>
       </div>
-      <div className={s.presentation}>
+      <div className={s.presentation} data-reveal="scale">
         <div
           className={s.stage}
           data-phase={phase}

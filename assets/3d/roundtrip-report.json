@@ -1,5 +1,5 @@
 {
-  "mesh_count": 31,
+  "mesh_count": 56,
   "layers": 16,
   "empty_layers": [],
   "bounds": [
@@ -16,5 +16,153 @@
       1.4636542797088623
     ]
   ],
-  "triangles": 332350
+  "triangles": 359410,
+  "materials": [
+    "Brushed aluminium",
+    "Detail brake ceramic red",
+    "Detail instrument display",
+    "Detail machined steel",
+    "Detail molded polymer",
+    "Detail satin aluminium",
+    "Detail warm charcoal leather",
+    "Leather interior",
+    "M_Graphite_Polymer",
+    "M_Mechanical_Steel",
+    "Obsidian metallic",
+    "Optical clear lens",
+    "Satin graphite",
+    "Smoked automotive glass",
+    "Tail light ruby",
+    "Tire rubber"
+  ],
+  "assembly_extras": {
+    "Layer_Body": {
+      "explode": [
+        0.0,
+        0.0,
+        0.48
+      ],
+      "category": ""
+    },
+    "Layer_BrakeBL": {
+      "explode": [
+        0,
+        0,
+        0
+      ],
+      "category": "brakes"
+    },
+    "Layer_BrakeBR": {
+      "explode": [
+        0,
+        0,
+        0
+      ],
+      "category": "brakes"
+    },
+    "Layer_BrakeFL": {
+      "explode": [
+        0,
+        0,
+        0
+      ],
+      "category": "brakes"
+    },
+    "Layer_BrakeFR": {
+      "explode": [
+        0,
+        0,
+        0
+      ],
+      "category": "brakes"
+    },
+    "Layer_Canopy": {
+      "explode": [
+        0.0,
+        0.0,
+        1.25
+      ],
+      "category": "filters"
+    },
+    "Layer_Chassis": {
+      "explode": [
+        0,
+        0,
+        0
+      ],
+      "category": "suspension"
+    },
+    "Layer_FrontBumper": {
+      "explode": [
+        0.55,
+        0.0,
+        0.1
+      ],
+      "category": ""
+    },
+    "Layer_Hood": {
+      "explode": [
+        0.17,
+        0.0,
+        1.05
+      ],
+      "category": "engine"
+    },
+    "Layer_Interior": {
+      "explode": [
+        0.0,
+        0.0,
+        0.2
+      ],
+      "category": "filters"
+    },
+    "Layer_Powertrain.001": {
+      "explode": [
+        0.0,
+        0.0,
+        0.12
+      ],
+      "category": "engine"
+    },
+    "Layer_RearBumper": {
+      "explode": [
+        -0.45,
+        0.0,
+        0.12
+      ],
+      "category": ""
+    },
+    "Layer_WheelBL": {
+      "explode": [
+        0.0,
+        -0.6,
+        0.0
+      ],
+      "category": "suspension"
+    },
+    "Layer_WheelBR": {
+      "explode": [
+        0.0,
+        0.6,
+        0.0
+      ],
+      "category": "suspension"
+    },
+    "Layer_WheelFL": {
+      "explode": [
+        0.0,
+        -0.6,
+        0.0
+      ],
+      "category": "suspension"
+    },
+    "Layer_WheelFR": {
+      "explode": [
+        0.0,
+        0.6,
+        0.0
+      ],
+      "category": "suspension"
+    }
+  }
 }

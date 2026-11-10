@@ -48,7 +48,7 @@ export default function ProductPage() {
         <span>{p.brand}</span>
       </div>
       <section className={s.product}>
-        <div className={s.gallery}>
+        <div className={s.gallery} data-reveal="left">
           <div
             className={s.mainImage}
             data-detail={
@@ -117,7 +117,7 @@ export default function ProductPage() {
             </span>
           </div>
         </div>
-        <div className={s.info}>
+        <div className={s.info} data-reveal="right">
           <h1>{p.name}</h1>
           <Link
             className={s.brand}
@@ -150,7 +150,7 @@ export default function ProductPage() {
                   >
                     Убавить
                   </button>
-                  <span>{quantity}</span>
+                  <span key={quantity}>{quantity}</span>
                   <button
                     disabled={quantity >= p.stock}
                     onClick={() => change(p.id, quantity + 1)}
@@ -212,7 +212,7 @@ export default function ProductPage() {
           ))}
         </div>
         <div
-          className={s.tabPanel}
+          key={tab} className={s.tabPanel}
           role="tabpanel"
           id={`panel-${tab}`}
           aria-labelledby={`tab-${tab}`}

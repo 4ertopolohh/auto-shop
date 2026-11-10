@@ -45,16 +45,17 @@ export default function CarScene({
       onPhase("error");
       return;
     }
+    const economical = matchMedia("(pointer:coarse)").matches || (navigator.hardwareConcurrency || 8) <= 4;
     renderer.setPixelRatio(
       Math.min(
         window.devicePixelRatio,
-        matchMedia("(pointer:coarse)").matches ? 1.3 : 1.75,
+        economical ? 1.15 : 2,
       ),
     );
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.15;
-    renderer.shadowMap.enabled = true;
+    renderer.toneMappingExposure = 1.05;
+    renderer.shadowMap.enabled = !economical;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     const scene = new THREE.Scene(),
       camera = new THREE.PerspectiveCamera(33, 1, 0.1, 70),
@@ -77,14 +78,14 @@ export default function CarScene({
       room = new RoomEnvironment(),
       environment = generator.fromScene(room, 0.04);
     scene.environment = environment.texture;
-    scene.environmentIntensity = 0.95;
+    scene.environmentIntensity = 1.2;
     room.dispose();
     generator.dispose();
     scene.add(new THREE.HemisphereLight(0xffffff, 0x7a8170, 1.65));
     const key = new THREE.DirectionalLight(0xffffff, 3.5);
     key.position.set(3, 7, 4);
     key.castShadow = true;
-    key.shadow.mapSize.set(1024, 1024);
+    key.shadow.mapSize.set(economical ? 512 : 2048, economical ? 512 : 2048);
     key.shadow.camera.left = -4;
     key.shadow.camera.right = 4;
     key.shadow.camera.top = 4;
@@ -208,10 +209,11 @@ export default function CarScene({
     };
     const move = (event: PointerEvent) => {
       if (event.pointerType === "touch" || dragging) return;
-      if (!hover) setHover(!!hit(event));
+      setHover(!!hit(event));
     };
     const leave = () => {
-      if (!dragging) setHover(false);
+      dragging = false;
+      setHover(false);
     };
     let downX = 0,
       downY = 0;
@@ -233,7 +235,7 @@ export default function CarScene({
           object = object.parent || undefined;
         }
       }
-      if (event.pointerType !== "touch" && !hover) setHover(!!hit(event));
+      if (event.pointerType !== "touch") setHover(!!hit(event));
     };
     element.addEventListener("pointermove", move);
     element.addEventListener("pointerleave", leave);
@@ -294,7 +296,17 @@ export default function CarScene({
             object.castShadow = true;
             object.receiveShadow = true;
             if (object.material instanceof THREE.MeshStandardMaterial)
-              object.material.envMapIntensity = 1.1;
+              object.material.envMapIntensity = 1.15;
+            const materials = Array.isArray(object.material) ? object.material : [object.material];
+            for (const material of materials) {
+              if (material instanceof THREE.MeshPhysicalMaterial && material.transmission > 0) {
+                material.thickness = material.name === "Smoked automotive glass" ? 0.004 : 0.002;
+                material.ior = 1.52;
+                material.transparent = false;
+                material.opacity = 1;
+                object.castShadow = false;
+              }
+            }
           }
         });
         scene.add(car);

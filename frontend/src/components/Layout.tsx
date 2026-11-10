@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { Check } from "lucide-react";
+import { usePageMotion } from "./usePageMotion";
 import SearchBox from "./SearchBox";
 import { useCart } from "../store";
 import type { Config } from "../types";
@@ -8,21 +9,7 @@ import s from "./Layout.module.scss";
 export function Logo() {
   return (
     <Link to="/" className={s.logo} aria-label="Крутящий момент — главная">
-      <svg
-        width="41"
-        height="41"
-        viewBox="0 0 44 44"
-        fill="none"
-        aria-hidden="true"
-      >
-        <rect width="44" height="44" rx="12" fill="currentColor" />
-        <path
-          d="M11 13v18m0-9 11-9m-11 9 11 9m5-18v18m0-18 6 10 6-10v18"
-          stroke="white"
-          strokeWidth="2.3"
-          strokeLinejoin="round"
-        />
-      </svg>
+      <img src="/images/project-logo.png" width="44" height="44" alt="" />
       <span>
         крутящий
         <br />
@@ -36,6 +23,7 @@ export default function Layout({ config }: { config: Config }) {
   const [menu, setMenu] = useState(false);
   const [notification, setNotification] = useState("");
   const location = useLocation();
+  usePageMotion(location.pathname + location.search);
   useEffect(() => {
     setMenu(false);
     window.scrollTo({ top: 0, behavior: "instant" });
@@ -62,7 +50,7 @@ export default function Layout({ config }: { config: Config }) {
           <div className={s.headerActions}>
             <Link to="/cart" className={s.cart}>
               <span>Корзина</span>
-              <b>{count}</b>
+              <b key={count}>{count}</b>
             </Link>
             <button
               className={s.menuButton}

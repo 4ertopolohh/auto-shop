@@ -145,7 +145,7 @@ export default function Checkout() {
       <p className={s.subtitle}>
         Выберите доставку. Мы уже позаботились об остальном.
       </p>
-      <div className={s.steps}>
+      <div className={s.steps} data-reveal="down">
         <span className={s.done}>
           <Check size={13} /> Корзина
         </span>
@@ -163,7 +163,7 @@ export default function Checkout() {
         <div>
           {!order ? (
             <>
-              <section className={s.checkoutSection}>
+              <section className={s.checkoutSection} data-reveal="up">
                 <div className={s.sectionTitle}>
                   <h2>Кому доставить</h2>
                   <LockKeyhole size={16} />
@@ -200,7 +200,7 @@ export default function Checkout() {
                   </label>
                 </div>
               </section>
-              <section className={s.checkoutSection}>
+              <section className={s.checkoutSection} data-reveal="up">
                 <div className={s.sectionTitle}>
                   <h2>Как вам удобнее?</h2>
                   <Truck size={18} />
@@ -290,7 +290,7 @@ export default function Checkout() {
               </section>
             </>
           ) : (
-            <section className={s.checkoutSection}>
+            <section className={s.checkoutSection} data-reveal="up">
               <div className={s.sectionTitle}>
                 <h2>Оплата заказа</h2>
                 <CreditCard size={19} />
@@ -355,7 +355,7 @@ export default function Checkout() {
             </section>
           )}
         </div>
-        <aside className={s.summary}>
+        <aside className={s.summary} data-reveal="scale">
           <h2>Ваш заказ</h2>
           <div>
             <span>Товары · {count} шт.</span>

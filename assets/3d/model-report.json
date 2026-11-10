@@ -1,13 +1,28 @@
 {
-  "meshes": 31,
-  "triangles": 332350,
+  "meshes": 56,
+  "triangles": 359410,
   "layers": 16,
-  "bytes": 6608536,
+  "bytes": 8418592,
   "qa_errors": [],
   "qa_warnings": [
     "exhaust: duplicate verts=13 loose verts=0",
     "Interior: duplicate verts=6 loose verts=0",
+    "Detail_Center console: duplicate verts=32 loose verts=0",
+    "Detail_Console bright surround: duplicate verts=176 loose verts=0",
+    "Detail_Steering rim: duplicate verts=128 loose verts=0",
+    "Detail_Pedal lever: duplicate verts=32 loose verts=0",
+    "Detail_Engine upper cover: duplicate verts=240 loose verts=0",
+    "Detail_Damper: duplicate verts=64 loose verts=0",
+    "Detail_Coil spring: duplicate verts=64 loose verts=0",
+    "Detail_Wiper blade: duplicate verts=32 loose verts=0",
+    "Detail_Wiper arm: duplicate verts=32 loose verts=0",
+    "Detail_Tire valve: duplicate verts=16 loose verts=0",
+    "Detail_Tire valve.001: duplicate verts=16 loose verts=0",
+    "Detail_Tire valve.002: duplicate verts=16 loose verts=0",
+    "Detail_Tire valve.003: duplicate verts=16 loose verts=0",
     "hidden back-to-back faces: SM_Powertrain_M_Mechanical_Steel<->SM_Powertrain_M_Graphite_Polymer (12 pairs) - delete to save tris",
     "hidden back-to-back faces: lightsLid (2 pairs) - delete to save tris"
-  ]
+  ],
+  "materials": 16,
+  "draw_primitives": 56
 }

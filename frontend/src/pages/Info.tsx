@@ -20,7 +20,7 @@ export default function Info({ type }: { type: "delivery" | "about" | "404" }) {
               : "404"}
         </span>
       </div>
-      <section className={s.intro}>
+      <section className={s.intro} data-reveal="up">
         <h1>{title}</h1>
         <p>
           {type === "delivery"
